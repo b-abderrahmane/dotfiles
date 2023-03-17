@@ -104,3 +104,18 @@ source $ZSH/oh-my-zsh.sh
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
+
+alias k="microk8s.kubectl"
+
+alias kl="microk8s.kubectl logs"
+alias kp="microk8s.kubectl get pods"
+alias ks="microk8s.kubectl get svc"
+alias kd="microk8s.kubectl describe"
+alias kdp="microk8s.kubectl describe pod"
+
+alias kr="microk8s.kubectl -n resc"
+alias krl="microk8s.kubectl -n resc logs"
+alias krp="microk8s.kubectl -n resc get pods"
+alias krs="microk8s.kubectl -n resc get svc"
+alias krd="microk8s.kubectl -n resc describe"
+alias krdp="microk8s.kubectl -n resc describe pod"
