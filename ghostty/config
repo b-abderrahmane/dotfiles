@@ -1,0 +1,9 @@
+clipboard_read = true
+clipboard_write = true
+font = "JetBrainsMono Nerd Font"
+copy_on_select = true
+keybind.copy = ctrl+shift+c
+keybind.paste = ctrl+shift+v
+keybind.new_tab = ctrl+shift+t
+shell = /opt/homebrew/bin/zsh
+
