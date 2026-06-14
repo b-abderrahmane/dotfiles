@@ -21,6 +21,8 @@ Personal dotfiles. Each top-level directory holds the config for one tool, edite
 | all | `zsh/zshrc` | `~/.zshrc` |
 | all | `tmux/tmux.conf` | `~/.tmux.conf` |
 | all | `kitty/kitty.conf` | `~/.config/kitty/kitty.conf` |
+| all | `claude/settings.json` | `~/.claude/settings.json` |
+| all | `claude/statusline.py` | `~/.claude/statusline.py` |
 | mac | `aerospace/aerospace.toml` | `~/.aerospace.toml` |
 | mac | `ghostty/config` | `~/Library/Application Support/com.mitchellh.ghostty/config` |
 | mac | `karabiner/karabiner.json` | `~/.config/karabiner/karabiner.json` |
@@ -58,6 +60,7 @@ Recommended macOS setting (already applied on this user's machine): `defaults wr
 ## Notes
 
 - **Machine-local zsh config** goes in `~/.zshrc.local` (untracked), sourced near the top of `zsh/zshrc` via `[ -f ~/.zshrc.local ] && source ~/.zshrc.local`. Per-machine PATH entries (e.g. `$HOME/.local/bin`), secrets, and overrides belong there — do **not** add them to the tracked `zsh/zshrc`, which must stay identical across machines.
+- **Claude Code config**: only `~/.claude/settings.json` (shared harness config) and `~/.claude/statusline.py` (the custom status line it invokes) are tracked, under `claude/`. The status-line command uses `~/.claude/statusline.py` (not an absolute `/Users/...` path) so it stays portable. Machine-local Claude overrides/secrets go in `~/.claude/settings.local.json` (untracked, Claude merges it over `settings.json`). Everything else under `~/.claude/` (sessions, history, projects, caches, telemetry, plugins) is runtime state — never track it.
 - `zsh/zshrc` depends on oh-my-zsh (`$ZSH="$HOME/.oh-my-zsh"`); current plugin set is `git`.
 - Configs assume Apple Silicon Homebrew paths (`/opt/homebrew/bin/zsh`).
 - This repo is synced across two Macs: one is the "live" source that pushes comprehensive config to `origin/main`; other machines pull and run `./install.sh`. Before pulling on a machine with local edits, fetch and check `main..origin/main` for overlap (incoming commits often rewrite `README.md`/`zsh/zshrc`).

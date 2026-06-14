@@ -10,6 +10,10 @@ DOTFILES_LINKS=(
   "all|zsh/zshrc|~/.zshrc"
   "all|tmux/tmux.conf|~/.tmux.conf"
   "all|kitty/kitty.conf|~/.config/kitty/kitty.conf"
+  # Claude Code: shared harness config + custom status line. Machine-local
+  # overrides/secrets go in ~/.claude/settings.local.json (untracked).
+  "all|claude/settings.json|~/.claude/settings.json"
+  "all|claude/statusline.py|~/.claude/statusline.py"
 
   "mac|aerospace/aerospace.toml|~/.aerospace.toml"
   "mac|ghostty/config|~/Library/Application Support/com.mitchellh.ghostty/config"
