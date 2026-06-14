@@ -11,9 +11,16 @@ font-family = "JetBrainsMono Nerd Font"
 font-size = 13.0
 
 # ---- Shell ----
-command = /opt/homebrew/bin/zsh
 
 # ---- Keybinds ----
+
+# --- Ensure Linux-style control key passthroughs ---
+#keybind = ctrl+c=unbind
+#keybind = ctrl+v=unbind
+#keybind = ctrl+r=unbind
+#keybind = ctrl+a=unbind
+#keybind = ctrl+e=unbind
+
 # FORMAT A (preferred): keybind = <shortcut> <action>
 keybind = ctrl+shift+c=copy_to_clipboard
 keybind = ctrl+shift+v=paste_from_clipboard
