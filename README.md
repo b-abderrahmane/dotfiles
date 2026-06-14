@@ -28,7 +28,7 @@ See [karabiner/README.md](./karabiner/README.md) for detailed configuration.
 ### Terminal Configurations
 - [Ghostty](./ghostty/) - Modern terminal emulator
 - [Kitty](./kitty/) - GPU-accelerated terminal
-- [tmux](./tmux/) - Terminal multiplexer, with a themed status bar (battery, CPU load/cores, RAM & disk used/total, LAN IP, DNS server, clock) driven by [`tmux/statusbar.sh`](./tmux/statusbar.sh)
+- [tmux](./tmux/) - Terminal multiplexer, with a themed status bar (battery, CPU load/cores, RAM & disk used/total, network ↓/↑ throughput, LAN IP, DNS server, clock) driven by [`tmux/statusbar.sh`](./tmux/statusbar.sh)
 - [zsh](./zsh/) - Shell configuration (oh-my-zsh)
 
 ### Shell Prompt
@@ -125,7 +125,7 @@ The configuration creates a Linux/i3-like environment on macOS:
 - `prefix h/j/k/l` - Focus pane left/down/up/right
 - `prefix H/J/K/L` - Resize pane (repeatable)
 - `v` / `y` in copy-mode - Begin selection / yank
-- Status bar shows battery · CPU (load/cores) · RAM (used/total) · disk (used/total) · IP · DNS · date/time · host
+- Status bar shows battery · CPU (load/cores) · RAM (used/total) · disk (used/total) · network (↓down ↑up) · IP · DNS · date/time · host
 
 ### Shell Prompt (Starship)
 - Directory · git branch & status · Kubernetes context (when set) · command duration · language versions

@@ -95,12 +95,57 @@ dns() {
   fi
 }
 
+# Interface carrying the default route.
+active_iface() {
+  if [ "$os" = Darwin ]; then
+    route -n get default 2>/dev/null | awk '/interface:/{print $2; exit}'
+  else
+    ip route get 1.1.1.1 2>/dev/null | awk '{for(i=1;i<=NF;i++)if($i=="dev")print $(i+1)}' | head -1
+  fi
+}
+
+# Cumulative "rx tx" byte counters for an interface.
+rxtx() {
+  if [ "$os" = Darwin ]; then
+    netstat -ibn -I "$1" 2>/dev/null | awk 'NR==2{print $7, $10}'   # Ibytes Obytes
+  else
+    printf '%s %s' \
+      "$(cat "/sys/class/net/$1/statistics/rx_bytes" 2>/dev/null)" \
+      "$(cat "/sys/class/net/$1/statistics/tx_bytes" 2>/dev/null)"
+  fi
+}
+
+# Network throughput, ↓down ↑up. Counters are cumulative, so the rate is the
+# delta against the previous sample (stashed in a temp file) over elapsed time.
+net() {
+  iface=$(active_iface)
+  [ -z "$iface" ] && { printf '↓— ↑—'; return; }
+  now=$(date +%s)
+  read -r rx tx < <(rxtx "$iface")
+  [ -z "$rx" ] || [ -z "$tx" ] && { printf '↓— ↑—'; return; }
+
+  state="${TMPDIR:-/tmp}/tmux-statusbar-net-$iface"
+  p_now=""; p_rx=""; p_tx=""
+  [ -r "$state" ] && read -r p_now p_rx p_tx < "$state"
+  printf '%s %s %s\n' "$now" "$rx" "$tx" > "$state"
+
+  if [ -n "$p_now" ] && [ "$now" -gt "$p_now" ]; then
+    dt=$((now - p_now))
+    drx=$(( (rx - p_rx) / dt )); [ "$drx" -lt 0 ] && drx=0   # clamp counter resets
+    dtx=$(( (tx - p_tx) / dt )); [ "$dtx" -lt 0 ] && dtx=0
+    printf '↓%s ↑%s' "$(human "$drx")" "$(human "$dtx")"
+  else
+    printf '↓— ↑—'   # first sample of the session: no baseline yet
+  fi
+}
+
 case "${1:-}" in
   battery) battery ;;
   cpu)     cpu ;;
   ram)     ram ;;
   disk)    disk ;;
+  net)     net ;;
   ip)      ip_addr ;;
   dns)     dns ;;
-  *) echo "usage: statusbar.sh {battery|cpu|ram|disk|ip|dns}" >&2; exit 1 ;;
+  *) echo "usage: statusbar.sh {battery|cpu|ram|disk|net|ip|dns}" >&2; exit 1 ;;
 esac
