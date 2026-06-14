@@ -28,53 +28,58 @@ See [karabiner/README.md](./karabiner/README.md) for detailed configuration.
 ### Terminal Configurations
 - [Ghostty](./ghostty/) - Modern terminal emulator
 - [Kitty](./kitty/) - GPU-accelerated terminal
-- [tmux](./tmux/) - Terminal multiplexer
-- [zsh](./zsh/) - Shell configuration
+- [tmux](./tmux/) - Terminal multiplexer, with a themed status bar (battery, CPU load/cores, RAM & disk used/total, LAN IP, DNS server, clock) driven by [`tmux/statusbar.sh`](./tmux/statusbar.sh)
+- [zsh](./zsh/) - Shell configuration (oh-my-zsh)
+
+### Shell Prompt
+- [Starship](./starship/) - Loaded by `zsh/zshrc` when installed (otherwise falls back to the oh-my-zsh theme). Shows directory, git branch/status, **Kubernetes context** when one is set, command duration, and contextual language versions. Needs a Nerd Font for the glyphs.
+
+### Editor / Agent
+- [Claude Code](./claude/) - `settings.json` plus a custom `statusline.py` status line
 
 ### Other Tools
 - [i3](./i3/) - Linux i3 configuration for reference
 
 ## Installation
 
-### Prerequisites
-```bash
-# Install Homebrew if not already installed
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+The repo is the source of truth: each tool's config lives in its own directory
+here and is **symlinked into place** by `install.sh`, so edits in the repo take
+effect live. The symlink map lives in [`lib/links.sh`](./lib/links.sh).
 
-# Install AeroSpace
-brew install --cask nikitabobko/tap/aerospace
-
-# Install Karabiner-Elements
-brew install --cask karabiner-elements
-```
-
-### Setup
-
-1. Clone this repository:
+1. Clone the repository:
 ```bash
 git clone <your-repo-url> ~/workspace/dotfiles
 cd ~/workspace/dotfiles
 ```
 
-2. Set up Karabiner:
+2. Check prerequisites (read-only — installs nothing, just reports gaps and
+   prints an install hint for each):
 ```bash
-# Backup existing config if any
-mv ~/.config/karabiner/karabiner.json ~/.config/karabiner/karabiner.json.backup
-
-# Symlink the config
-ln -sf ~/workspace/dotfiles/karabiner/karabiner.json ~/.config/karabiner/karabiner.json
+./check.sh
 ```
 
-3. Set up AeroSpace:
+3. Install the recommended tools (macOS / Homebrew):
 ```bash
-# Symlink the config
-ln -sf ~/workspace/dotfiles/aerospace/aerospace.toml ~/.aerospace.toml
-
-# Restart AeroSpace
-aerospace reload-config
+brew install --cask nikitabobko/tap/aerospace karabiner-elements ghostty
+brew install tmux starship
+brew install --cask font-jetbrains-mono-nerd-font   # Nerd Font for prompt/status-bar glyphs
 ```
 
-4. Set up other tools as needed (tmux, zsh, etc.)
+4. Symlink everything into place. Idempotent — correct links are left untouched,
+   drift is fixed, and any pre-existing real file is backed up to `<target>.bak`
+   first. Preview without touching anything via `--dry-run`:
+```bash
+./install.sh --dry-run   # show the plan
+./install.sh             # apply
+```
+
+5. Reload the relevant app after edits: tmux `prefix + r`, AeroSpace `Alt+Shift+c`,
+   Ghostty/Kitty restart. New shells pick up the prompt automatically.
+
+> **Adding a tool:** drop its config in a new top-level directory and add one
+> line to the symlink map in `lib/links.sh` — don't edit the scripts.
+> Machine-local zsh (PATH, secrets) goes in `~/.zshrc.local` (untracked); see
+> [CLAUDE.md](./CLAUDE.md) for the full design notes.
 
 ## Desired macOS Experience
 
@@ -113,6 +118,18 @@ The configuration creates a Linux/i3-like environment on macOS:
 - `Ctrl+A` - Select all in GUI apps
 - `Ctrl+F` - Find in GUI apps
 - Native Unix shortcuts preserved in terminals
+
+### tmux (prefix = `Ctrl+b`)
+- `prefix r` - Reload config
+- `prefix |` / `prefix -` - Split vertical / horizontal (keeps current dir)
+- `prefix h/j/k/l` - Focus pane left/down/up/right
+- `prefix H/J/K/L` - Resize pane (repeatable)
+- `v` / `y` in copy-mode - Begin selection / yank
+- Status bar shows battery · CPU (load/cores) · RAM (used/total) · disk (used/total) · IP · DNS · date/time · host
+
+### Shell Prompt (Starship)
+- Directory · git branch & status · Kubernetes context (when set) · command duration · language versions
+- Configured in [`starship/starship.toml`](./starship/starship.toml); edit and open a new shell to see changes
 
 ## Contributing
 
