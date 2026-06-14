@@ -105,3 +105,8 @@ source $ZSH/oh-my-zsh.sh
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 # Add Go's bin to PATH only when Go is installed (keeps non-Go machines quiet)
 command -v go >/dev/null && export PATH=$PATH:$(go env GOPATH)/bin
+
+# Starship prompt — overrides the oh-my-zsh theme set above when installed,
+# and falls back to ZSH_THEME on machines without it. Config lives in
+# ~/.config/starship.toml (symlinked from the dotfiles repo by install.sh).
+command -v starship >/dev/null && eval "$(starship init zsh)"

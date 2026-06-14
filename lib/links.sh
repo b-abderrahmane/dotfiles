@@ -9,7 +9,10 @@
 DOTFILES_LINKS=(
   "all|zsh/zshrc|~/.zshrc"
   "all|tmux/tmux.conf|~/.tmux.conf"
+  "all|tmux/statusbar.sh|~/.config/tmux/statusbar.sh"
   "all|kitty/kitty.conf|~/.config/kitty/kitty.conf"
+  # Starship prompt config (engine loaded from zsh/zshrc when installed).
+  "all|starship/starship.toml|~/.config/starship.toml"
   # Claude Code: shared harness config + custom status line. Machine-local
   # overrides/secrets go in ~/.claude/settings.local.json (untracked).
   "all|claude/settings.json|~/.claude/settings.json"

@@ -35,6 +35,7 @@ check required "zsh"      command -v zsh      -- "brew install zsh"
 check required "oh-my-zsh" test -d "$HOME/.oh-my-zsh" \
   -- 'sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"'
 check optional "tmux"     command -v tmux     -- "brew install tmux"
+check optional "starship (prompt)" command -v starship -- "brew install starship"
 check optional "gh (zshrc plugin)" command -v gh -- "brew install gh"
 
 if [ "$DOTFILES_OS" = mac ]; then
