@@ -103,4 +103,5 @@ source $ZSH/oh-my-zsh.sh
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
-export PATH=$PATH:$(go env GOPATH)/bin
+# Add Go's bin to PATH only when Go is installed (keeps non-Go machines quiet)
+command -v go >/dev/null && export PATH=$PATH:$(go env GOPATH)/bin
