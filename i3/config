@@ -148,7 +148,7 @@ mode "resize" {
         # Pressing up will shrink the window’s height.
         # Pressing down will grow the window’s height.
         bindsym h resize shrink width 10 px or 10 ppt
-        bindsym l resize grow height 10 px or 10 ppt
+        bindsym j resize grow height 10 px or 10 ppt
         bindsym k resize shrink height 10 px or 10 ppt
         bindsym l resize grow width 10 px or 10 ppt
 
@@ -202,12 +202,14 @@ exec_always xrandr \
     --output DP-1 --off --output DP-2 --off --output DP-3 --off \
     --output DP-4 --off --output DP-5 --off --output HDMI-1 --off
 
-# LG (HDMI-0): workspaces 1–5. Note: $ws1-3 resolve to named workspaces.
-workspace $ws1 output HDMI-0
-workspace $ws2 output HDMI-0
-workspace $ws3 output HDMI-0
-workspace 4    output HDMI-0
-workspace 5    output HDMI-0
+# LG (HDMI-0): workspaces 1–5. $ws2/$ws3 contain spaces, so they must
+# be quoted here (variable substitution runs before parsing, and i3's
+# `workspace <name> output <out>` needs a token boundary after the name).
+workspace $ws1   output HDMI-0
+workspace "$ws2" output HDMI-0
+workspace "$ws3" output HDMI-0
+workspace 4      output HDMI-0
+workspace 5      output HDMI-0
 
 # Dell (DP-0): workspaces 6–10
 workspace 6  output DP-0
