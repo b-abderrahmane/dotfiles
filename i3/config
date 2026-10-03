@@ -185,11 +185,42 @@ bindsym Ctrl+$mod+Print exec --no-startup-id maim --format=png --window $(xdotoo
 bindsym Ctrl+Shift+Print exec --no-startup-id maim --format=png --select | xclip -selection clipboard -t image/png
 
 
-# set wallpaper
-exec_always  feh --bg-fill /home/abdou/Pictures/default.jpg --bg-fill /home/abdou/Pictures/left.jpg
-
-# setup screen layout
-
 # screen layout
-exec_always xrandr --output HDMI-0 --mode 2560x1080 --pos 0x0 --rotate left --output DP-2 --primary --mode 3440x1440 --pos 1080x352 --rotate normal --output DP-5 --off --output DP-4 --off --output DP-3 --off --output DP-1 --off --output DP-0 --off
+#   HDMI-0 : LG ultrawide (EDID 1e6d/GSM), 2560x1080 landscape, left
+#   DP-0   : Dell (EDID 10ac/DEL), physically pivoted on its stand so the
+#            top edge faces the viewer's right; --rotate left compensates
+#            and yields a 1080x1920 portrait on the right.
+#   Identify a new panel with `xrandr --verbose | grep EDID -A 1`
+#   (vendor is the first two bytes after the 00ffffffffffff00 header).
+# Vertical offsets model the physical mount: LG sits slightly higher than
+# Dell's vertical centre. LG at y=360 → centre at y=900; Dell centre at
+# y=960 (midpoint of its 1920 height). Nudge LG's y value if the cursor
+# transition between screens doesn't line up with the real edges.
+exec_always xrandr \
+    --output HDMI-0 --mode 2560x1080 --pos 0x360  --rotate normal \
+    --output DP-0   --mode 1920x1080 --pos 2560x0 --rotate left --primary \
+    --output DP-1 --off --output DP-2 --off --output DP-3 --off \
+    --output DP-4 --off --output DP-5 --off --output HDMI-1 --off
+
+# LG (HDMI-0): workspaces 1–5. Note: $ws1-3 resolve to named workspaces.
+workspace $ws1 output HDMI-0
+workspace $ws2 output HDMI-0
+workspace $ws3 output HDMI-0
+workspace 4    output HDMI-0
+workspace 5    output HDMI-0
+
+# Dell (DP-0): workspaces 6–10
+workspace 6  output DP-0
+workspace 7  output DP-0
+workspace 8  output DP-0
+workspace 9  output DP-0
+workspace 10 output DP-0
+
+# wallpaper: one image per monitor; feh orders monitors by their y
+# position (lowest y first), so with Dell at y=0 and LG at y=360 the
+# first arg lands on Dell. left.jpg is portrait (1440x2560) → Dell;
+# default.jpg is landscape (4080x3072) → LG. A single --bg-fill with N
+# images is the correct feh syntax; repeating --bg-fill breaks the
+# per-monitor assignment.
+exec_always feh --bg-fill /home/abdou/Pictures/left.jpg /home/abdou/Pictures/default.jpg
 exec_always picom
