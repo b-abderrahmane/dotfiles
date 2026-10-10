@@ -7,6 +7,10 @@
 # ram/disk are "used/total"; cpu is "load/cores" (load average over core count —
 # the meaningful x/y for CPU, since >cores means the machine is saturated).
 
+# Force "." decimals: under a comma locale (e.g. LC_NUMERIC=nl_NL) awk prints
+# big numbers as "1,6e+10", which human() then can't parse as a number.
+export LC_ALL=C
+
 os=$(uname -s)
 
 # bytes -> compact human size (e.g. 940M, 12G, 1.2T)
@@ -90,7 +94,8 @@ dns() {
   if [ "$os" = Darwin ]; then
     scutil --dns 2>/dev/null | awk '/nameserver\[0\]/{print $3; exit}' | grep . || printf '—'
   else
-    { resolvectl dns 2>/dev/null | awk '{print $NF; exit}' \
+    # First actual server address; skips empty "Global:"/"Link N (iface):" lines.
+    { resolvectl dns 2>/dev/null | awk '{for(i=1;i<=NF;i++) if($i ~ /^[0-9a-fA-F.:]+$/ && $i ~ /[0-9]/ && $i ~ /[.:]./){print $i; exit}}' \
       || awk '/^nameserver/{print $2; exit}' /etc/resolv.conf 2>/dev/null; } | grep . || printf '—'
   fi
 }
